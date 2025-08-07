@@ -1,0 +1,261 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Damage Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #e6e6e6 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 1000 1000" opacity="0.1"><circle cx="100" cy="100" r="50" fill="none" stroke="#4a90e2" stroke-width="2"/><circle cx="900" cy="900" r="70" fill="none" stroke="#4a90e2" stroke-width="2"/><line x1="200" y1="200" x2="800" y2="800" stroke="#4a90e2" stroke-width="2" stroke-dasharray="10,10"/><circle cx="500" cy="500" r="100" fill="none" stroke="#4a90e2" stroke-width="2"/><line x1="300" y1="700" x2="700" y2="300" stroke="#4a90e2" stroke-width="2" stroke-dasharray="10,10"/></svg>') no-repeat center center;
+            background-size: cover;
+            z-index: -1;
+        }
+        .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #1a3c87;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        h3 {
+            color: #1a3c87;
+            font-size: 20px;
+            margin: 15px 0 10px;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+        .calculate-btn {
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.1s;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .calculate-btn:hover {
+            background-color: #357abd;
+            transform: scale(1.05);
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 20px;
+            background-color: #e7f3fe;
+            padding: 15px;
+            border: 2px solid #4a90e2;
+            border-radius: 6px;
+            color: #1a3c87;
+            text-align: center;
+        }
+        hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+        .preset-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        .preset-btn:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h2>Damage Calculator</h2>
+        <div class="input-group">
+            <label for="damage">Damage:</label>
+            <input type="number" id="damage" min="0" step="any" required>
+        </div>
+        <div class="input-group">
+            <label for="armorPiercing">Armor Piercing:</label>
+            <input type="number" id="armorPiercing" min="0" step="any" required>
+        </div>
+        <hr>
+        <div class="input-group">
+            <label for="armor">Armor:</label>
+            <input type="number" id="armor" min="0" step="any" required>
+        </div>
+        <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
+        <div id="result"></div>
+
+        <h3>Damage & Armor Piercing Presets</h3>
+        <div class="button-group">
+            <button class="preset-btn" onclick="setDamageAndAP(30, 30)">Dmg: 30, AP: 30</button>
+            <button class="preset-btn" onclick="setDamageAndAP(42, 40)">Dmg: 42, AP: 40</button>
+            <button class="preset-btn" onclick="setDamageAndAP(52, 45)">Dmg: 52, AP: 45</button>
+            <button class="preset-btn" onclick="setDamageAndAP(62, 50)">Dmg: 62, AP: 50</button>
+            <button class="preset-btn" onclick="setDamageAndAP(72, 55)">Dmg: 72, AP: 55</button>
+            <button class="preset-btn" onclick="setDamageAndAP(82, 60)">Dmg: 82, AP: 60</button>
+            <button class="preset-btn" onclick="setDamageAndAP(92, 65)">Dmg: 92, AP: 65</button>
+            <button class="preset-btn" onclick="setDamageAndAP(102, 70)">Dmg: 102, AP: 70</button>
+            <button class="preset-btn" onclick="setDamageAndAP(112, 75)">Dmg: 112, AP: 75</button>
+            <button class="preset-btn" onclick="setDamageAndAP(122, 80)">Dmg: 122, AP: 80</button>
+        </div>
+
+        <hr>
+
+        <h3>Armor Presets</h3>
+        <div class="button-group">
+            <button class="preset-btn" onclick="setArmor(10)">Armor: 10</button>
+            <button class="preset-btn" onclick="setArmor(20)">Armor: 20</button>
+            <button class="preset-btn" onclick="setArmor(30)">Armor: 30</button>
+            <button class="preset-btn" onclick="setArmor(40)">Armor: 40</button>
+            <button class="preset-btn" onclick="setArmor(50)">Armor: 50</button>
+            <button class="preset-btn" onclick="setArmor(60)">Armor: 60</button>
+            <button class="preset-btn" onclick="setArmor(70)">Armor: 70</button>
+            <button class="preset-btn" onclick="setArmor(80)">Armor: 80</button>
+            <button class="preset-btn" onclick="setArmor(90)">Armor: 90</button>
+            <button class="preset-btn" onclick="setArmor(100)">Armor: 100</button>
+        </div>
+    </div>
+
+    <script>
+        function calculateDamage() {
+            // Get input values
+            const damage = parseFloat(document.getElementById('damage').value);
+            const armor = parseFloat(document.getElementById('armor').value);
+            const armorPiercing = parseFloat(document.getElementById('armorPiercing').value);
+
+            // Validate inputs
+            if (isNaN(damage) || isNaN(armor) || isNaN(armorPiercing)) {
+                document.getElementById('result').innerHTML = 'Please enter valid numbers for all fields.';
+                return;
+            }
+
+            // Step 1: Adjust armor with armor piercing
+            const effectiveArmor = Math.max(0, armor - armorPiercing);
+
+            // Step 2: Calculate armor deflection total
+            const armorDeflectionTotal = Math.pow(1.1, effectiveArmor / 5);
+
+            // Step 3: Divide damage by armor deflection total
+            let newDamage = damage / armorDeflectionTotal;
+
+            // Step 4: Check if new damage is less than armor * 2
+            if (newDamage < effectiveArmor * 2) {
+                // Step 5: Calculate damage with armor
+                const damageWithArmor = newDamage * 4 - effectiveArmor;
+                // Step 6: Multiply damage by damageWithArmor / (newDamage * 4)
+                newDamage = newDamage * (damageWithArmor / (newDamage * 4));
+            }
+
+            // Display result
+            document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
+        }
+
+        function setDamageAndAP(damage, armorPiercing) {
+            document.getElementById('damage').value = damage;
+            document.getElementById('armorPiercing').value = armorPiercing;
+        }
+
+        function setArmor(armor) {
+            document.getElementById('armor').value = armor;
+        }
+    </script>
+</body>
+</html>
