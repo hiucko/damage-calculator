@@ -239,56 +239,81 @@
       }
     });
 
-    // Boiler & Napalm
-    const boiler = document.getElementById("boiler");
-    const napalm = document.getElementById("napalm");
-    const explosion = document.getElementById("explosion");
+// Boiler & Napalm
+const boiler = document.getElementById("boiler");
+const napalm = document.getElementById("napalm");
+const explosion = document.getElementById("explosion");
 
-    let boilerPos = { x: 50, y: 200, dx: 2, dy: 2 };
-    let napalmPos = { x: 300, y: 400, dx: -2, dy: -2 };
+function getRandomPos(el) {
+  const screenW = window.innerWidth - el.clientWidth;
+  const screenH = window.innerHeight - el.clientHeight;
+  return {
+    x: Math.random() * screenW,
+    y: Math.random() * screenH
+  };
+}
 
-    function animateBoilerNapalm() {
-      const screenW = window.innerWidth;
-      const screenH = window.innerHeight;
+// spawn at random, ensure not overlapping
+let boilerPos = getRandomPos(boiler);
+let napalmPos = getRandomPos(napalm);
 
-      // Move boiler
-      boilerPos.x += boilerPos.dx;
-      boilerPos.y += boilerPos.dy;
-      if (boilerPos.x <= 0 || boilerPos.x + boiler.clientWidth >= screenW) boilerPos.dx *= -1;
-      if (boilerPos.y <= 0 || boilerPos.y + boiler.clientHeight >= screenH) boilerPos.dy *= -1;
+// make sure they're not too close
+while (
+  Math.abs(boilerPos.x - napalmPos.x) < 100 &&
+  Math.abs(boilerPos.y - napalmPos.y) < 100
+) {
+  napalmPos = getRandomPos(napalm);
+}
 
-      // Move napalm
-      napalmPos.x += napalmPos.dx;
-      napalmPos.y += napalmPos.dy;
-      if (napalmPos.x <= 0 || napalmPos.x + napalm.clientWidth >= screenW) napalmPos.dx *= -1;
-      if (napalmPos.y <= 0 || napalmPos.y + napalm.clientHeight >= screenH) napalmPos.dy *= -1;
+// add velocities
+boilerPos.dx = 2;
+boilerPos.dy = 2;
+napalmPos.dx = -2;
+napalmPos.dy = -2;
 
-      boiler.style.left = boilerPos.x + "px";
-      boiler.style.top = boilerPos.y + "px";
-      napalm.style.left = napalmPos.x + "px";
-      napalm.style.top = napalmPos.y + "px";
+function animateBoilerNapalm() {
+  const screenW = window.innerWidth;
+  const screenH = window.innerHeight;
 
-      // Collision detection
-      if (
-        boilerPos.x < napalmPos.x + napalm.clientWidth &&
-        boilerPos.x + boiler.clientWidth > napalmPos.x &&
-        boilerPos.y < napalmPos.y + napalm.clientHeight &&
-        boilerPos.y + boiler.clientHeight > napalmPos.y
-      ) {
-        boiler.style.display = "none";
-        napalm.style.display = "none";
+  // Move boiler
+  boilerPos.x += boilerPos.dx;
+  boilerPos.y += boilerPos.dy;
+  if (boilerPos.x <= 0 || boilerPos.x + boiler.clientWidth >= screenW) boilerPos.dx *= -1;
+  if (boilerPos.y <= 0 || boilerPos.y + boiler.clientHeight >= screenH) boilerPos.dy *= -1;
 
-        explosion.style.left = (boilerPos.x + napalmPos.x) / 2 + "px";
-        explosion.style.top = (boilerPos.y + napalmPos.y) / 2 + "px";
-        explosion.style.display = "block";
+  // Move napalm
+  napalmPos.x += napalmPos.dx;
+  napalmPos.y += napalmPos.dy;
+  if (napalmPos.x <= 0 || napalmPos.x + napalm.clientWidth >= screenW) napalmPos.dx *= -1;
+  if (napalmPos.y <= 0 || napalmPos.y + napalm.clientHeight >= screenH) napalmPos.dy *= -1;
 
-        return; // stop animation
-      }
+  boiler.style.left = boilerPos.x + "px";
+  boiler.style.top = boilerPos.y + "px";
+  napalm.style.left = napalmPos.x + "px";
+  napalm.style.top = napalmPos.y + "px";
 
-      requestAnimationFrame(animateBoilerNapalm);
-    }
+  // Collision detection
+  if (
+    boilerPos.x < napalmPos.x + napalm.clientWidth &&
+    boilerPos.x + boiler.clientWidth > napalmPos.x &&
+    boilerPos.y < napalmPos.y + napalm.clientHeight &&
+    boilerPos.y + boiler.clientHeight > napalmPos.y
+  ) {
+    boiler.style.display = "none";
+    napalm.style.display = "none";
 
-    animateBoilerNapalm();
+    explosion.style.left = (boilerPos.x + napalmPos.x) / 2 + "px";
+    explosion.style.top = (boilerPos.y + napalmPos.y) / 2 + "px";
+    explosion.style.display = "block";
+
+    return; // stop animation after explosion
+  }
+
+  requestAnimationFrame(animateBoilerNapalm);
+}
+
+animateBoilerNapalm();
+
   </script>
 </body>
 </html>
