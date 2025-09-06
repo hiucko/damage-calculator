@@ -56,6 +56,33 @@
       box-shadow: 0 0 20px white;
       z-index: 1;
     }
+
+    /* Stilet Box */
+    #stiletBox {
+      position: absolute;
+      width: 150px;
+      height: 70px;
+      background: black;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 22px;
+      border-radius: 10px;
+      z-index: 1;
+      box-shadow: 0 0 25px red;
+      animation: rainbowGlow 3s linear infinite;
+    }
+
+    @keyframes rainbowGlow {
+      0%   { box-shadow: 0 0 25px red; }
+      20%  { box-shadow: 0 0 25px orange; }
+      40%  { box-shadow: 0 0 25px yellow; }
+      60%  { box-shadow: 0 0 25px green; }
+      80%  { box-shadow: 0 0 25px blue; }
+      100% { box-shadow: 0 0 25px violet; }
+    }
   </style>
 </head>
 <body>
@@ -83,6 +110,9 @@
   <!-- DVD Logo -->
   <div id="dvdLogo">DVD</div>
 
+  <!-- Stilet Box -->
+  <div id="stiletBox">stilet</div>
+
   <script>
     // Calculator Logic
     function calculateDamage() {
@@ -107,28 +137,32 @@
       document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
     }
 
-    // Bouncing DVD Logo
-    const dvd = document.getElementById("dvdLogo");
-    let x = 100, y = 100;
-    let dx = 2, dy = 2;
+    // Bounce Logic
+    function makeBouncer(el, speedX, speedY) {
+      let x = Math.random() * (window.innerWidth - el.clientWidth);
+      let y = Math.random() * (window.innerHeight - el.clientHeight);
+      let dx = speedX, dy = speedY;
 
-    function animate() {
-      const screenW = window.innerWidth - dvd.clientWidth;
-      const screenH = window.innerHeight - dvd.clientHeight;
+      function move() {
+        const screenW = window.innerWidth - el.clientWidth;
+        const screenH = window.innerHeight - el.clientHeight;
 
-      x += dx;
-      y += dy;
+        x += dx;
+        y += dy;
 
-      if (x <= 0 || x >= screenW) dx = -dx;
-      if (y <= 0 || y >= screenH) dy = -dy;
+        if (x <= 0 || x >= screenW) dx = -dx;
+        if (y <= 0 || y >= screenH) dy = -dy;
 
-      dvd.style.left = x + "px";
-      dvd.style.top = y + "px";
+        el.style.left = x + "px";
+        el.style.top = y + "px";
 
-      requestAnimationFrame(animate);
+        requestAnimationFrame(move);
+      }
+      move();
     }
 
-    animate();
+    makeBouncer(document.getElementById("dvdLogo"), 2, 2);
+    makeBouncer(document.getElementById("stiletBox"), 3, 2);
   </script>
 </body>
 </html>
