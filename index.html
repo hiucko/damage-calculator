@@ -15,7 +15,6 @@
       min-height: 100vh;
     }
 
-    /* Giant Title */
     .main-title {
       text-align: center;
       font-size: 60px;
@@ -87,7 +86,7 @@
     /* IQ Counter */
     #iqCounter {
       position: absolute;
-      width: 240px; /* 2x bigger */
+      width: 240px;
       height: 120px;
       background: darkred;
       color: white;
@@ -99,6 +98,36 @@
       border-radius: 15px;
       z-index: 1;
       box-shadow: 0 0 30px yellow;
+    }
+
+    /* Boiler & Napalm */
+    .pngBox {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background-size: cover;
+      background-position: center;
+      z-index: 1;
+    }
+
+    #boiler {
+      background-image: url("boiler.png");
+    }
+
+    #napalm {
+      background-image: url("napalm.png");
+    }
+
+    /* Explosion */
+    #explosion {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background-image: url("explosion.png");
+      background-size: cover;
+      background-position: center;
+      display: none;
+      z-index: 2;
     }
   </style>
 </head>
@@ -132,6 +161,13 @@
 
   <!-- IQ Counter -->
   <div id="iqCounter">IQ: 500</div>
+
+  <!-- Boiler and Napalm -->
+  <div id="boiler" class="pngBox"></div>
+  <div id="napalm" class="pngBox"></div>
+
+  <!-- Explosion -->
+  <div id="explosion"></div>
 
   <script>
     // Calculator Logic
@@ -171,7 +207,6 @@
         y += dy;
 
         let bounced = false;
-
         if (x <= 0 || x >= screenW) { dx = -dx; bounced = true; }
         if (y <= 0 || y >= screenH) { dy = -dy; bounced = true; }
 
@@ -198,6 +233,57 @@
         iqEl.textContent = "IQ: " + iqValue;
       }
     });
+
+    // Boiler & Napalm
+    const boiler = document.getElementById("boiler");
+    const napalm = document.getElementById("napalm");
+    const explosion = document.getElementById("explosion");
+
+    let boilerPos = { x: 50, y: 200, dx: 2, dy: 2 };
+    let napalmPos = { x: 300, y: 400, dx: -2, dy: -2 };
+
+    function animateBoilerNapalm() {
+      const screenW = window.innerWidth;
+      const screenH = window.innerHeight;
+
+      // Move boiler
+      boilerPos.x += boilerPos.dx;
+      boilerPos.y += boilerPos.dy;
+      if (boilerPos.x <= 0 || boilerPos.x + boiler.clientWidth >= screenW) boilerPos.dx *= -1;
+      if (boilerPos.y <= 0 || boilerPos.y + boiler.clientHeight >= screenH) boilerPos.dy *= -1;
+
+      // Move napalm
+      napalmPos.x += napalmPos.dx;
+      napalmPos.y += napalmPos.dy;
+      if (napalmPos.x <= 0 || napalmPos.x + napalm.clientWidth >= screenW) napalmPos.dx *= -1;
+      if (napalmPos.y <= 0 || napalmPos.y + napalm.clientHeight >= screenH) napalmPos.dy *= -1;
+
+      boiler.style.left = boilerPos.x + "px";
+      boiler.style.top = boilerPos.y + "px";
+      napalm.style.left = napalmPos.x + "px";
+      napalm.style.top = napalmPos.y + "px";
+
+      // Collision detection
+      if (
+        boilerPos.x < napalmPos.x + napalm.clientWidth &&
+        boilerPos.x + boiler.clientWidth > napalmPos.x &&
+        boilerPos.y < napalmPos.y + napalm.clientHeight &&
+        boilerPos.y + boiler.clientHeight > napalmPos.y
+      ) {
+        boiler.style.display = "none";
+        napalm.style.display = "none";
+
+        explosion.style.left = (boilerPos.x + napalmPos.x) / 2 + "px";
+        explosion.style.top = (boilerPos.y + napalmPos.y) / 2 + "px";
+        explosion.style.display = "block";
+
+        return; // stop animation
+      }
+
+      requestAnimationFrame(animateBoilerNapalm);
+    }
+
+    animateBoilerNapalm();
   </script>
 </body>
 </html>
