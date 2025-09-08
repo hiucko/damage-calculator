@@ -18,8 +18,6 @@
     min-height: 100vh;
   }
 
-
-
     .main-title {
       text-align: center;
       font-size: 60px;
@@ -77,6 +75,13 @@
       z-index: 1;
       box-shadow: 0 0 25px red;
       animation: rainbowGlow 3s linear infinite;
+    }
+    
+    #soundboard {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 9999; /* stays above bouncing boxes */
     }
 
     @keyframes rainbowGlow {
@@ -158,6 +163,14 @@
     <div id="result"></div>
   </div>
 
+  <!-- Soundboard Embed -->
+  <div id="soundboard">
+    <iframe width="110" height="200" 
+      src="https://www.myinstants.com/instant/a-10-thunderbolt-ii-86442/embed/" 
+      frameborder="0" scrolling="no"></iframe>
+  </div>
+
+  
   <!-- DVD Logo -->
   <div id="dvdLogo">DVD</div>
 
