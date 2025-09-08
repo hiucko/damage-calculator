@@ -58,7 +58,30 @@
       box-shadow: 0 0 20px white;
       z-index: 1;
     }
+    
+  #soundBtn {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    background: crimson;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px black;
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.1s, background 0.3s;
+  }
 
+  #soundBtn:hover {
+    background: darkred;
+    transform: scale(1.1);
+  }
+
+    
     /* Stilet Box */
     #stiletBox {
       position: absolute;
@@ -155,7 +178,12 @@
     <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
     <div id="result"></div>
   </div>
-  
+
+  <!-- Sound Button -->
+  <button id="soundBtn">▶ Play A-10 Sound</button>
+
+  <audio id="soundPlayer" src="a10.ogg"></audio>
+
   <!-- DVD Logo -->
   <div id="dvdLogo">DVD</div>
 
@@ -311,6 +339,15 @@ function animateBoilerNapalm() {
 }
 
 animateBoilerNapalm();
+
+// Sound button logic
+const soundBtn = document.getElementById("soundBtn");
+const soundPlayer = document.getElementById("soundPlayer");
+
+soundBtn.addEventListener("click", () => {
+  soundPlayer.currentTime = 0; // restart sound each click
+  soundPlayer.play();
+});
 
   </script>
 </body>
