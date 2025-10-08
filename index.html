@@ -16,6 +16,13 @@
       min-height: 100vh;
     }
 
+    .layout {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+
     .calculator {
       background: white;
       padding: 30px;
@@ -24,6 +31,7 @@
       max-width: 600px;
       width: 100%;
       box-sizing: border-box;
+      text-align: center;
     }
 
     h2 {
@@ -68,9 +76,6 @@
       margin-top: 15px;
       font-size: 16px;
       transition: background-color 0.3s, transform 0.1s;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
     }
 
     .calculate-btn:hover {
@@ -89,31 +94,108 @@
       color: #1a3c87;
       text-align: center;
     }
+
+    /* Side panels for preset buttons */
+    .preset-panel {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .preset-btn {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #4a90e2;
+      border-radius: 8px;
+      background-color: white;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .preset-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+    }
+
+    .preset-btn::after {
+      content: attr(data-name);
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .preset-btn:hover::after {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
-  <div class="calculator">
-    <h2>Damage Calculator</h2>
-
-    <div class="input-group">
-      <label for="damage">Damage:</label>
-      <input type="number" id="damage" min="0" step="any" required>
+  <div class="layout">
+    <!-- Left Panel: Damage + AP Presets -->
+    <div class="preset-panel" id="damagePanel">
+      <button class="preset-btn" data-name="Preset 1" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(56, 5)"></button>
+      <button class="preset-btn" data-name="Preset 2" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(42, 10)"></button>
+      <button class="preset-btn" data-name="Preset 3" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(35, 20)"></button>
+      <button class="preset-btn" data-name="Preset 4" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(25, 15)"></button>
+      <button class="preset-btn" data-name="Preset 5" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(60, 25)"></button>
+      <button class="preset-btn" data-name="Preset 6" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(48, 30)"></button>
+      <button class="preset-btn" data-name="Preset 7" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(72, 40)"></button>
+      <button class="preset-btn" data-name="Preset 8" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(90, 45)"></button>
+      <button class="preset-btn" data-name="Preset 9" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(105, 50)"></button>
+      <button class="preset-btn" data-name="Preset 10" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(120, 60)"></button>
     </div>
 
-    <div class="input-group">
-      <label for="armorPiercing">Armor Piercing:</label>
-      <input type="number" id="armorPiercing" min="0" step="any" required>
+    <!-- Calculator -->
+    <div class="calculator">
+      <h2>Damage Calculator</h2>
+
+      <div class="input-group">
+        <label for="damage">Damage:</label>
+        <input type="number" id="damage" min="0" step="any" required>
+      </div>
+
+      <div class="input-group">
+        <label for="armorPiercing">Armor Piercing:</label>
+        <input type="number" id="armorPiercing" min="0" step="any" required>
+      </div>
+
+      <hr>
+
+      <div class="input-group">
+        <label for="armor">Armor:</label>
+        <input type="number" id="armor" min="0" step="any" required>
+      </div>
+
+      <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
+      <div id="result"></div>
     </div>
 
-    <hr>
-
-    <div class="input-group">
-      <label for="armor">Armor:</label>
-      <input type="number" id="armor" min="0" step="any" required>
+    <!-- Right Panel: Armor Presets -->
+    <div class="preset-panel" id="armorPanel">
+      <button class="preset-btn" data-name="Armor 1" style="background-image:url('placeholder.png')" onclick="setArmor(35)"></button>
+      <button class="preset-btn" data-name="Armor 2" style="background-image:url('placeholder.png')" onclick="setArmor(45)"></button>
+      <button class="preset-btn" data-name="Armor 3" style="background-image:url('placeholder.png')" onclick="setArmor(55)"></button>
+      <button class="preset-btn" data-name="Armor 4" style="background-image:url('placeholder.png')" onclick="setArmor(65)"></button>
+      <button class="preset-btn" data-name="Armor 5" style="background-image:url('placeholder.png')" onclick="setArmor(75)"></button>
+      <button class="preset-btn" data-name="Armor 6" style="background-image:url('placeholder.png')" onclick="setArmor(85)"></button>
+      <button class="preset-btn" data-name="Armor 7" style="background-image:url('placeholder.png')" onclick="setArmor(95)"></button>
+      <button class="preset-btn" data-name="Armor 8" style="background-image:url('placeholder.png')" onclick="setArmor(105)"></button>
+      <button class="preset-btn" data-name="Armor 9" style="background-image:url('placeholder.png')" onclick="setArmor(115)"></button>
+      <button class="preset-btn" data-name="Armor 10" style="background-image:url('placeholder.png')" onclick="setArmor(125)"></button>
     </div>
-
-    <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
-    <div id="result"></div>
   </div>
 
   <script>
@@ -137,6 +219,15 @@
       }
 
       document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
+    }
+
+    function setDamageAndAP(damage, armorPiercing) {
+      document.getElementById('damage').value = damage;
+      document.getElementById('armorPiercing').value = armorPiercing;
+    }
+
+    function setArmor(armor) {
+      document.getElementById('armor').value = armor;
     }
   </script>
 </body>
