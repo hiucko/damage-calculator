@@ -5,32 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Damage Calculator</title>
   <style>
+    :root {
+      --bg-color: linear-gradient(135deg, #e0e7ff 0%, #e6e6e6 100%);
+      --text-color: #222;
+      --card-bg: #ffffff;
+      --btn-bg: #4a90e2;
+      --btn-hover: #357abd;
+      --input-border: #ccc;
+    }
+
+    body.dark {
+      --bg-color: linear-gradient(135deg, #0a0a0a 0%, #1c1c1c 100%);
+      --text-color: #f2f2f2;
+      --card-bg: #121212;
+      --btn-bg: #8b5cf6;
+      --btn-hover: #7c3aed;
+      --input-border: #333;
+    }
+
     body {
       font-family: "Segoe UI", Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background: linear-gradient(135deg, #e0e7ff 0%, #e6e6e6 100%);
+      background: var(--bg-color);
+      color: var(--text-color);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      transition: background 0.6s ease, color 0.6s ease;
     }
 
     .calculator {
-      background: white;
+      background: var(--card-bg);
       padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       max-width: 600px;
       width: 100%;
       box-sizing: border-box;
+      transition: background 0.6s ease, box-shadow 0.6s ease;
     }
 
     h2 {
-      color: #1a3c87;
+      color: var(--btn-bg);
       text-align: center;
       margin-bottom: 20px;
-      font-size: 28px;
+      font-size: 32px;
     }
 
     .input-group {
@@ -40,54 +61,68 @@
     label {
       display: block;
       margin-bottom: 8px;
-      color: #333;
       font-weight: 500;
     }
 
     input {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      border: 2px solid var(--input-border);
+      border-radius: 8px;
       font-size: 16px;
+      background: transparent;
+      color: var(--text-color);
       transition: border-color 0.3s;
     }
 
     input:focus {
-      border-color: #4a90e2;
+      border-color: var(--btn-bg);
       outline: none;
     }
 
-    .calculate-btn {
-      background-color: #4a90e2;
+    .calculate-btn, .theme-btn {
+      background-color: var(--btn-bg);
       color: white;
       padding: 12px 24px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 15px;
       font-size: 16px;
-      transition: background-color 0.3s, transform 0.1s;
+      transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 15px auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
 
-    .calculate-btn:hover {
-      background-color: #357abd;
+    .calculate-btn:hover, .theme-btn:hover {
+      background-color: var(--btn-hover);
       transform: scale(1.05);
+      box-shadow: 0 0 15px var(--btn-hover);
     }
 
     #result {
       margin-top: 20px;
       font-weight: bold;
       font-size: 20px;
-      background-color: #e7f3fe;
+      background-color: rgba(231, 243, 254, 0.8);
       padding: 15px;
-      border: 2px solid #4a90e2;
-      border-radius: 6px;
-      color: #1a3c87;
+      border: 2px solid var(--btn-bg);
+      border-radius: 8px;
+      color: var(--btn-bg);
       text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark #result {
+      background-color: rgba(60, 60, 60, 0.6);
+      color: #c084fc;
+      border-color: #a855f7;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--input-border);
+      margin: 20px 0;
     }
   </style>
 </head>
@@ -114,6 +149,8 @@
 
     <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
     <div id="result"></div>
+
+    <button class="theme-btn" onclick="toggleTheme()">🌗 Toggle Dark Theme</button>
   </div>
 
   <script>
@@ -137,6 +174,11 @@
       }
 
       document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
     }
   </script>
 </body>
