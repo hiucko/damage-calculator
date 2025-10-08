@@ -103,6 +103,106 @@
       justify-items: center;
     }
 
+    /* Dropdown wrapper for weapons/enemies */
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      margin: 10px;
+    }
+
+    /* Main image button */
+    .dropdown > .preset-btn {
+      width: 70px;
+      height: 70px;
+      border: 2px solid #4a90e2;
+      border-radius: 10px;
+      background-color: white;
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.3s;
+      position: relative;
+    }
+
+    .dropdown > .preset-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+    }
+
+    /* Tooltip label above main button */
+    .dropdown > .preset-btn::after {
+      content: attr(data-name);
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(5px);
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .dropdown > .preset-btn:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Dropdown content (ammo/enemy variations) */
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 105%; /* just below the main button */
+      left: 50%;
+      transform: translateX(-50%); /* center under button */
+      background-color: white;
+      min-width: 130px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      z-index: 100;
+      overflow: hidden;
+      flex-direction: column;
+      animation: fadeIn 0.2s ease;
+    }
+
+    /* Each dropdown button */
+    .dropdown-content button {
+      border: none;
+      background: #f8f9ff;
+      cursor: pointer;
+      padding: 8px;
+      font-size: 14px;
+      border-bottom: 1px solid #ddd;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .dropdown-content button:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-content button:hover {
+      background-color: #4a90e2;
+      color: white;
+    }
+
+    /* Show dropdown on hover */
+    .dropdown:hover .dropdown-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Small fade animation */
+    @keyframes fadeIn {
+     from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+     to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+
 
     .preset-btn {
       width: 60px;
@@ -150,19 +250,27 @@
 </head>
 <body>
   <div class="layout">
-    <!-- Left Panel: Damage + AP Presets -->
-    <div class="preset-panel" id="damagePanel">
-      <button class="preset-btn" data-name="Preset 1" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(56, 5)"></button>
-      <button class="preset-btn" data-name="Preset 2" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(42, 10)"></button>
-      <button class="preset-btn" data-name="Preset 3" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(35, 20)"></button>
-      <button class="preset-btn" data-name="Preset 4" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(25, 15)"></button>
-      <button class="preset-btn" data-name="Preset 5" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(60, 25)"></button>
-      <button class="preset-btn" data-name="Preset 6" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(48, 30)"></button>
-      <button class="preset-btn" data-name="Preset 7" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(72, 40)"></button>
-      <button class="preset-btn" data-name="Preset 8" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(90, 45)"></button>
-      <button class="preset-btn" data-name="Preset 9" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(105, 50)"></button>
-      <button class="preset-btn" data-name="Preset 10" style="background-image:url('placeholder.png')" onclick="setDamageAndAP(120, 60)"></button>
+    <div class="preset-panel" id="weaponPanel">
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Weapon1">Weapon1</button>
+       <div class="dropdown-content">
+          <button onclick="setDamageAndAP(56, 5)">Ammo 1</button>
+          <button onclick="setDamageAndAP(42, 10)">Ammo 2</button>
+          <button onclick="setDamageAndAP(35, 20)">Ammo 3</button>
+          <button onclick="setDamageAndAP(25, 15)">Ammo 4</button>
+        </div>
+     </div>
+
+     <div class="dropdown">
+       <button class="preset-btn" data-name="Weapon2">Weapon2</button>
+        <div class="dropdown-content">
+          <button onclick="setDamageAndAP(60, 25)">Ammo 1</button>
+          <button onclick="setDamageAndAP(48, 30)">Ammo 2</button>
+         <button onclick="setDamageAndAP(72, 40)">Ammo 3</button>
+        </div>
+     </div>
     </div>
+
 
     <!-- Calculator -->
     <div class="calculator">
@@ -190,19 +298,25 @@
     </div>
 
     <!-- Right Panel: Armor Presets -->
-    <div class="preset-panel" id="armorPanel">
-      <button class="preset-btn" data-name="Armor 1" style="background-image:url('placeholder.png')" onclick="setArmor(35)"></button>
-      <button class="preset-btn" data-name="Armor 2" style="background-image:url('placeholder.png')" onclick="setArmor(45)"></button>
-      <button class="preset-btn" data-name="Armor 3" style="background-image:url('placeholder.png')" onclick="setArmor(55)"></button>
-      <button class="preset-btn" data-name="Armor 4" style="background-image:url('placeholder.png')" onclick="setArmor(65)"></button>
-      <button class="preset-btn" data-name="Armor 5" style="background-image:url('placeholder.png')" onclick="setArmor(75)"></button>
-      <button class="preset-btn" data-name="Armor 6" style="background-image:url('placeholder.png')" onclick="setArmor(85)"></button>
-      <button class="preset-btn" data-name="Armor 7" style="background-image:url('placeholder.png')" onclick="setArmor(95)"></button>
-      <button class="preset-btn" data-name="Armor 8" style="background-image:url('placeholder.png')" onclick="setArmor(105)"></button>
-      <button class="preset-btn" data-name="Armor 9" style="background-image:url('placeholder.png')" onclick="setArmor(115)"></button>
-      <button class="preset-btn" data-name="Armor 10" style="background-image:url('placeholder.png')" onclick="setArmor(125)"></button>
+    <div class="preset-panel" id="enemyPanel">
+     <div class="dropdown">
+        <button class="preset-btn" data-name="Armor1">Armor1</button>
+       <div class="dropdown-content">
+         <button onclick="setArmor(35)">Variation 1</button>
+          <button onclick="setArmor(45)">Variation 2</button>
+          <button onclick="setArmor(55)">Variation 3</button>
+        </div>
+     </div>
+
+     <div class="dropdown">
+        <button class="preset-btn" data-name="Armor2">Armor2</button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(75)">Variation 1</button>
+          <button onclick="setArmor(85)">Variation 2</button>
+       </div>
+     </div>
     </div>
-  </div>
+
 
   <script>
     function calculateDamage() {
