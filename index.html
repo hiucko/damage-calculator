@@ -29,6 +29,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       max-width: 600px;
+      min-width: 400px;
       width: 100%;
       box-sizing: border-box;
       text-align: center;
@@ -99,7 +100,7 @@
     .preset-panel {
       display: grid;
       grid-template-columns: repeat(2, 1fr); /* two columns */
-     gap: 10px;
+      gap: 10px;
       justify-items: center;
     }
 
@@ -251,22 +252,56 @@
 <body>
   <div class="layout">
     <div class="preset-panel" id="weaponPanel">
+
       <div class="dropdown">
-       <button class="preset-btn" data-name="Weapon1">Weapon1</button>
+        <button class="preset-btn" data-name="m54c" style="background-image:url('m54c.png')"></button>
+          <div class="dropdown-content">
+            <button onclick="setDamageAndAP(44, 5)">Обычный</button>
+            <button onclick="setDamageAndAP(33, 40)">Бронебойный</button>
+            <button onclick="setDamageAndAP(36.3, 5)">Зажигательный</button>
+            <button onclick="setDamageAndAP(60.5, 40)">HEAP</button>
+            <button onclick="setDamageAndAP(3.3, 5)">Резиновый</button>
+          </div>
+      </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="m4spr" style="background-image:url('m4spr.png')"></button>
        <div class="dropdown-content">
-          <button onclick="setDamageAndAP(56, 5)">Ammo 1</button>
-          <button onclick="setDamageAndAP(42, 10)">Ammo 2</button>
-          <button onclick="setDamageAndAP(35, 20)">Ammo 3</button>
-          <button onclick="setDamageAndAP(25, 15)">Ammo 4</button>
+          <button onclick="setDamageAndAP(56, 5)">Обычный</button>
+          <button onclick="setDamageAndAP(42, 40)">Бронебойный</button>
+          <button onclick="setDamageAndAP(4.2, 0)">Резиновый</button>
+          <button onclick="setDamageAndAP(60.5, 35)">Высокоскоростной (A19)</button>
+          <button onclick="setDamageAndAP(44, 50)">Ударный (A19)</button>
+          <button onclick="setDamageAndAP(44, 25)">Зажигательный (A19)</button>
+          <button onclick="setDamageAndAP(44, 5)">Обычный (A19)</button>
+          <button onclick="setDamageAndAP(33, 40)">Бронебойный (A19)</button>
+          <button onclick="setDamageAndAP(3.3, 5)">Резиновый (A19)</button>
         </div>
      </div>
 
      <div class="dropdown">
-       <button class="preset-btn" data-name="Weapon2">Weapon2</button>
+       <button class="preset-btn" data-name="m63" style="background-image:url('m63.png')"></button>
         <div class="dropdown-content">
-          <button onclick="setDamageAndAP(60, 25)">Ammo 1</button>
-          <button onclick="setDamageAndAP(48, 30)">Ammo 2</button>
-         <button onclick="setDamageAndAP(72, 40)">Ammo 3</button>
+          <button onclick="setDamageAndAP(34, 5)">Обычный</button>
+          <button onclick="setDamageAndAP(26, 40)">Бронебойный</button>
+          <button onclick="setDamageAndAP(45, 30)">HEAP</button>
+          <button onclick="setDamageAndAP(3, 5)">Резиновый</button>
+        </div>
+     </div>
+
+     <div class="dropdown">
+       <button class="preset-btn" data-name="m42a2" style="background-image:url('m42a2.png')"></button>
+        <div class="dropdown-content">
+          <button onclick="setDamageAndAP(260, 5)">Дробь (за все дробинки)</button>
+          <button onclick="setDamageAndAP(70, 20)">Пуля</button>
+          <button onclick="setDamageAndAP(120, 35)">Флешетта (за все дробинки)</button>
+        </div>
+     </div>
+
+     <div class="dropdown">
+       <button class="preset-btn" data-name="xm88" style="background-image:url('xm88.png')"></button>
+        <div class="dropdown-content">
+          <button onclick="setDamageAndAP(80, 10)">Пуля (каждое последующее попадание по той же цели добавляет 10 ББ, стакается до 50)</button>
         </div>
      </div>
     </div>
@@ -293,62 +328,146 @@
         <input type="number" id="armor" min="0" step="any" required>
       </div>
 
-      <button class="calculate-btn" onclick="calculateDamage()">Calculate</button>
       <div id="result"></div>
     </div>
 
     <!-- Right Panel: Armor Presets -->
-    <div class="preset-panel" id="enemyPanel">
-     <div class="dropdown">
-        <button class="preset-btn" data-name="Armor1">Armor1</button>
+    <div class="preset-panel" id="armorPanel"></div>
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Бойлер" style="background-image:url('boiler.png')"></button>
        <div class="dropdown-content">
-         <button onclick="setArmor(35)">Variation 1</button>
-          <button onclick="setArmor(45)">Variation 2</button>
-          <button onclick="setArmor(55)">Variation 3</button>
+          <button onclick="setArmor(20)">Обычный</button>
+          <button onclick="setArmor(0)">Траппер (силкер)</button>
         </div>
      </div>
 
-     <div class="dropdown">
-        <button class="preset-btn" data-name="Armor2">Armor2</button>
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Не бронированные " style="background-image:url('defender.png')"></button>
        <div class="dropdown-content">
-          <button onclick="setArmor(75)">Variation 1</button>
-          <button onclick="setArmor(85)">Variation 2</button>
-       </div>
+          <button onclick="setArmor(0)">Носилка (любая)</button>
+          <button onclick="setArmor(0)">Дрон (любой)</button>
+          <button onclick="setArmor(0)">Лорд (любой)</button>
+          <button onclick="setArmor(0)">Страж</button>
+        </div>
      </div>
-    </div>
+
+      <div class="dropdown">
+        <button class="preset-btn" data-name="Бурильщик" style="background-image:url('burrower.png')"onclick="setArmor(25)"></button>
+     </div>
+
+      <div class="dropdown">
+        <button class="preset-btn" data-name="Плеватель" style="background-image:url('spitter.png')"onclick="setArmor(15)"></button>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Воин" style="background-image:url('crusher.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(20)">Обычный</button>
+          <button onclick="setArmor(25)">Боксёр</button> // ПРОВЕРИТЬ
+        </div>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Крушитель" style="background-image:url('crusher.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(30)">Обычный</button>
+          <button onclick="setArmor(30)">Таран (Лоб)</button>
+          <button onclick="setArmor(15)">Таран</button>
+        </div>
+     </div>
+
+      <div class="dropdown">
+        <button class="preset-btn" data-name="Охотник (любой)" style="background-image:url('lurker.png')"onclick="setArmor(20)"></button>
+     </div>
+
+      <div class="dropdown">
+        <button class="preset-btn" data-name="Королева (любая)" style="background-image:url('queen.png')"onclick="setArmor(25)"></button>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Разрушитель" style="background-image:url('ravager.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(25)">Обычный</button>
+          <button onclick="setArmor(30)">Берсерк</button>
+          <button onclick="setArmor(30)">Ёж</button>
+        </div>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Преторианец" style="background-image:url('praetorian.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(25)">Обычный</button>
+          <button onclick="setArmor(35)">Валькирия</button>
+          <button onclick="setArmor(25)">Угнетатель</button>
+          <button onclick="setArmor(25)">Авангард</button>
+          <button onclick="setArmor(20)">Танцор</button>
+        </div>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Бегун" style="background-image:url('ravager.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(10)">Обычный</button>
+          <button onclick="setArmor(15)">Окислитель</button>
+        </div>
+     </div>
+
+      <div class="dropdown">
+       <button class="preset-btn" data-name="Защитник" style="background-image:url('defender.png')"></button>
+       <div class="dropdown-content">
+          <button onclick="setArmor(35)">Обычный</button>
+          <button onclick="setArmor(40)">Опустил голову</button>
+          <button onclick="setArmor(70)">Укреплённый (Лоб)</button>
+          <button onclick="setArmor(65)">Укреплённый (Бок и зад)</button>
+          <button onclick="setArmor(35)">Стальной</button>
+          <button onclick="setArmor(40)">Стальной опустил голову</button>
+          <button onclick="setArmor(60)">Стальной укреплённый (Лоб)</button>
+          <button onclick="setArmor(45)">Стальной укреплённый (Бок и зад)</button>
+        </div>
+     </div>
+   </div>
 
 
-  <script>
-    function calculateDamage() {
-      const damage = parseFloat(document.getElementById('damage').value);
-      const armor = parseFloat(document.getElementById('armor').value);
-      const armorPiercing = parseFloat(document.getElementById('armorPiercing').value);
 
-      if (isNaN(damage) || isNaN(armor) || isNaN(armorPiercing)) {
-        document.getElementById('result').innerHTML = 'Please enter valid numbers.';
-        return;
+    <script>
+      function calculateDamage() {
+        const damage = parseFloat(document.getElementById('damage').value);
+        const armor = parseFloat(document.getElementById('armor').value);
+        const armorPiercing = parseFloat(document.getElementById('armorPiercing').value);
+
+        if (isNaN(damage) || isNaN(armor) || isNaN(armorPiercing)) {
+          document.getElementById('result').innerHTML = 'Please enter valid numbers.';
+          return;
+        }
+
+        const effectiveArmor = Math.max(0, armor - armorPiercing);
+        const armorDeflectionTotal = Math.pow(1.1, effectiveArmor / 5);
+        let newDamage = damage / armorDeflectionTotal;
+
+        if (newDamage < effectiveArmor * 2) {
+          const damageWithArmor = newDamage * 4 - effectiveArmor;
+          newDamage = newDamage * (damageWithArmor / (newDamage * 4));
+        }
+
+        document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
       }
 
-      const effectiveArmor = Math.max(0, armor - armorPiercing);
-      const armorDeflectionTotal = Math.pow(1.1, effectiveArmor / 5);
-      let newDamage = damage / armorDeflectionTotal;
-
-      if (newDamage < effectiveArmor * 2) {
-        const damageWithArmor = newDamage * 4 - effectiveArmor;
-        newDamage = newDamage * (damageWithArmor / (newDamage * 4));
+      function setDamageAndAP(damage, armorPiercing) {
+        document.getElementById('damage').value = damage;
+        document.getElementById('armorPiercing').value = armorPiercing;
+        calculateDamage();
       }
 
-      document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
-    }
+      function setArmor(armor) {
+        document.getElementById('armor').value = armor;
+        calculateDamage();
+      }
 
-    function setDamageAndAP(damage, armorPiercing) {
-      document.getElementById('damage').value = damage;
-      document.getElementById('armorPiercing').value = armorPiercing;
-    }
-
-    function setArmor(armor) {
-      document.getElementById('armor').value = armor;
-    }
-  </script>
+      // Automatically calculate whenever user edits fields
+      document.addEventListener("DOMContentLoaded", () => {
+        const inputs = document.querySelectorAll("#damage, #armor, #armorPiercing");
+        inputs.forEach(input => input.addEventListener("input", calculateDamage));
+      });
+    </script>
 </body>
 </html>
