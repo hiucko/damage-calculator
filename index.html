@@ -99,9 +99,15 @@
     /* Side panels for preset buttons */
     .preset-panel {
       display: grid;
-      grid-template-columns: repeat(2, 1fr); /* two columns */
+      grid-template-columns: repeat(2, 1fr); /* two columns for weapon panel */
       gap: 10px;
       justify-items: center;
+    }
+
+    /* Specific styling for armor panel to achieve 3x4 grid */
+    #armorPanel {
+      grid-template-columns: repeat(3, 1fr); /* three columns for armor panel */
+      grid-template-rows: repeat(4, auto); /* four rows, auto height */
     }
 
     /* Dropdown wrapper for weapons/enemies */
@@ -203,8 +209,6 @@
      to { opacity: 1; transform: translateX(-50%) translateY(0); }
     }
 
-
-
     .preset-btn {
       width: 60px;
       height: 60px;
@@ -245,14 +249,11 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0); /* slides upward into view */
     }
-
-
   </style>
 </head>
 <body>
   <div class="layout">
     <div class="preset-panel" id="weaponPanel">
-
       <div class="dropdown">
         <button class="preset-btn" data-name="m54c" style="background-image:url('m54c.png')"></button>
           <div class="dropdown-content">
@@ -306,7 +307,6 @@
      </div>
     </div>
 
-
     <!-- Calculator -->
     <div class="calculator">
       <h2>Damage Calculator</h2>
@@ -332,7 +332,7 @@
     </div>
 
     <!-- Right Panel: Armor Presets -->
-    <div class="preset-panel" id="armorPanel"></div>
+    <div class="preset-panel" id="armorPanel">
       <div class="dropdown">
        <button class="preset-btn" data-name="Бойлер" style="background-image:url('boiler.png')"></button>
        <div class="dropdown-content">
@@ -352,11 +352,11 @@
      </div>
 
       <div class="dropdown">
-        <button class="preset-btn" data-name="Бурильщик" style="background-image:url('burrower.png')"onclick="setArmor(25)"></button>
+        <button class="preset-btn" data-name="Бурильщик" style="background-image:url('burrower.png')" onclick="setArmor(25)"></button>
      </div>
 
       <div class="dropdown">
-        <button class="preset-btn" data-name="Плеватель" style="background-image:url('spitter.png')"onclick="setArmor(15)"></button>
+        <button class="preset-btn" data-name="Плеватель" style="background-image:url('spitter.png')" onclick="setArmor(15)"></button>
      </div>
 
       <div class="dropdown">
@@ -377,11 +377,11 @@
      </div>
 
       <div class="dropdown">
-        <button class="preset-btn" data-name="Охотник (любой)" style="background-image:url('lurker.png')"onclick="setArmor(20)"></button>
+        <button class="preset-btn" data-name="Охотник (любой)" style="background-image:url('lurker.png')" onclick="setArmor(20)"></button>
      </div>
 
       <div class="dropdown">
-        <button class="preset-btn" data-name="Королева (любая)" style="background-image:url('queen.png')"onclick="setArmor(25)"></button>
+        <button class="preset-btn" data-name="Королева (любая)" style="background-image:url('queen.png')" onclick="setArmor(25)"></button>
      </div>
 
       <div class="dropdown">
@@ -400,7 +400,7 @@
           <button onclick="setArmor(35)">Валькирия</button>
           <button onclick="setArmor(25)">Угнетатель</button>
           <button onclick="setArmor(25)">Авангард</button>
-          <button onclick="setArmor(20)">Танцор</button>
+          <button onclick="setArmor(20 ?>">Танцор</button>
         </div>
      </div>
 
@@ -426,8 +426,6 @@
         </div>
      </div>
    </div>
-
-
 
     <script>
       function calculateDamage() {
