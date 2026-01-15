@@ -5,187 +5,372 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Damage Calculator</title>
   <style>
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
+    * {
       margin: 0;
-      padding: 20px;
-      background: linear-gradient(135deg, #e0e7ff 0%, #e6e6e6 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .layout {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 30px;
-    }
-
-    .calculator {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-      max-width: 600px;
-      min-width: 400px;
-      width: 100%;
+      padding: 0;
       box-sizing: border-box;
-      text-align: center;
     }
 
-    h2 {
-      color: #1a3c87;
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 28px;
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #e2e8f0;
     }
 
-    .input-group {
-      margin: 15px 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #333;
-      font-weight: 500;
-    }
-
-    input {
+    .container {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      max-width: 1400px;
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: border-color 0.3s;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
-    input:focus {
-      border-color: #4a90e2;
-      outline: none;
+    .panel {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    .calculate-btn {
-      background-color: #4a90e2;
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-top: 15px;
-      font-size: 16px;
-      transition: background-color 0.3s, transform 0.1s;
-    }
-
-    .calculate-btn:hover {
-      background-color: #357abd;
-      transform: scale(1.05);
-    }
-
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 20px;
-      background-color: #e7f3fe;
-      padding: 15px;
-      border: 2px solid #4a90e2;
-      border-radius: 6px;
-      color: #1a3c87;
+    .panel h3 {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-bottom: 20px;
       text-align: center;
     }
 
-    /* Side panels for preset buttons */
-    .preset-panel {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr); /* two columns for weapon panel */
-      gap: 10px;
-      justify-items: center;
-    }
-
-    /* Specific styling for armor panel to achieve 3x4 grid */
-    #armorPanel {
-      grid-template-columns: repeat(3, 1fr); /* three columns for armor panel */
-      grid-template-rows: repeat(4, auto); /* four rows, auto height */
-    }
-
-    /* Dropdown wrapper for weapons/enemies */
-    .dropdown {
-      position: relative;
-      display: inline-block;
-      margin: 10px;
-    }
-
-    /* Main image button */
-    .dropdown > .preset-btn {
-      width: 70px;
-      height: 70px;
-      border: 2px solid #4a90e2;
-      border-radius: 10px;
-      background-color: white;
-      background-size: cover;
-      background-position: center;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.3s;
-      position: relative;
-    }
-
-    .dropdown > .preset-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
-    }
-
-    /* Tooltip label above main button */
-    .dropdown > .preset-btn::after {
-      content: attr(data-name);
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(5px);
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      padding: 3px 8px;
-      border-radius: 5px;
-      font-size: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      white-space: nowrap;
+    .weapon-panel {
+      width: 280px;
       z-index: 10;
     }
 
-    .dropdown > .preset-btn:hover::after {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .calculator-panel {
+      width: 420px;
+      z-index: 5;
     }
 
-    /* Dropdown content (ammo/enemy variations) */
+    .armor-panel {
+      width: 340px;
+      z-index: 10;
+    }
+
+    .calculator-panel h2 {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: #60a5fa;
+      background: rgba(15, 23, 42, 0.8);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.3), transparent);
+      margin: 24px 0;
+    }
+
+    .advanced-toggle {
+      background: rgba(96, 165, 250, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      color: #60a5fa;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+
+    .advanced-toggle:hover {
+      background: rgba(96, 165, 250, 0.2);
+      border-color: #60a5fa;
+    }
+
+    .advanced-settings {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .advanced-settings.active {
+      max-height: 800px;
+    }
+
+    .falloff-group {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .falloff-group h4 {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .falloff-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .add-falloff-btn {
+      background: rgba(167, 139, 250, 0.1);
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      color: #a78bfa;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    .add-falloff-btn:hover {
+      background: rgba(167, 139, 250, 0.2);
+      border-color: #a78bfa;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #60a5fa;
+    }
+
+    .checkbox-group label {
+      margin: 0;
+      cursor: pointer;
+      font-size: 13px;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .remove-falloff-btn {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .remove-falloff-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+
+    #result {
+      margin-top: 24px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #60a5fa;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preset-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .weapon-panel .preset-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .armor-panel .preset-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .preset-btn {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      background-color: rgba(15, 23, 42, 0.4);
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .preset-btn-label {
+      background: rgba(15, 23, 42, 0.9);
+      color: #e2e8f0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .preset-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .preset-btn:hover {
+      transform: translateY(-4px);
+      border-color: #60a5fa;
+      box-shadow: 0 8px 24px rgba(96, 165, 250, 0.3);
+    }
+
+    .preset-btn:hover::before {
+      opacity: 1;
+    }
+
+    .preset-btn::after {
+      content: attr(data-name);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: rgba(15, 23, 42, 0.95);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      z-index: 100;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .preset-btn:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-12px);
+    }
+
     .dropdown-content {
       display: none;
       position: absolute;
-      top: 105%; /* just below the main button */
+      top: calc(100% + 4px);
       left: 50%;
-      transform: translateX(-50%); /* center under button */
-      background-color: white;
-      min-width: 130px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, 0.3);
       border-radius: 8px;
-      z-index: 100;
+      min-width: 180px;
+      max-width: 250px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      z-index: 300;
       overflow: hidden;
-      flex-direction: column;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
       animation: fadeIn 0.2s ease;
     }
 
-    /* Each dropdown button */
     .dropdown-content button {
+      width: 100%;
+      padding: 10px 14px;
+      background: transparent;
       border: none;
-      background: #f8f9ff;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+      color: #cbd5e1;
+      font-size: 13px;
+      text-align: left;
       cursor: pointer;
-      padding: 8px;
-      font-size: 14px;
-      border-bottom: 1px solid #ddd;
-      transition: background-color 0.2s, color 0.2s;
+      transition: all 0.2s ease;
+      white-space: normal;
+      line-height: 1.4;
     }
 
     .dropdown-content button:last-child {
@@ -193,277 +378,397 @@
     }
 
     .dropdown-content button:hover {
-      background-color: #4a90e2;
-      color: white;
+      background: rgba(96, 165, 250, 0.2);
+      color: #60a5fa;
     }
 
-    /* Show dropdown on hover */
-    .dropdown:hover .dropdown-content {
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Small fade animation */
     @keyframes fadeIn {
-     from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
-     to { opacity: 1; transform: translateX(-50%) translateY(0); }
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
-    .preset-btn {
-      width: 60px;
-      height: 60px;
-      border: 2px solid #4a90e2;
-      border-radius: 8px;
-      background-color: white;
-      cursor: pointer;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      transition: transform 0.2s, box-shadow 0.3s;
+    @media (max-width: 1200px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
     }
 
-    .preset-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 10px rgba(74, 144, 226, 0.6);
+    ::-webkit-scrollbar {
+      width: 8px;
     }
 
-    .preset-btn::after {
-     content: attr(data-name);
-     position: absolute;
-     top: -30px; /* place above button */
-     left: 50%;
-      transform: translateX(-50%) translateY(5px);
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-     padding: 3px 8px;
-      border-radius: 5px;
-     font-size: 12px;
-     opacity: 0;
-     pointer-events: none;
-     transition: opacity 0.2s, transform 0.2s;
-     white-space: nowrap;
-     z-index: 10; /* keeps it above other buttons */
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.3);
+      border-radius: 4px;
     }
 
-    .preset-btn:hover::after {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0); /* slides upward into view */
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.5);
     }
   </style>
 </head>
 <body>
-  <div class="layout">
-    <div class="preset-panel" id="weaponPanel">
-      <div class="dropdown">
-        <button class="preset-btn" data-name="m54c" style="background-image:url('m54c.png')"></button>
-          <div class="dropdown-content">
-            <button onclick="setDamageAndAP(44, 5)">Обычный</button>
-            <button onclick="setDamageAndAP(33, 40)">Бронебойный</button>
-            <button onclick="setDamageAndAP(36.3, 5)">Зажигательный</button>
-            <button onclick="setDamageAndAP(60.5, 40)">HEAP</button>
-            <button onclick="setDamageAndAP(3.3, 5)">Резиновый</button>
+  <div class="container">
+    <!-- Weapon Panel -->
+    <div class="panel weapon-panel">
+      <h3>Оружие</h3>
+      <div id="weaponGrid" class="preset-grid"></div>
+    </div>
+
+    <!-- Calculator Panel -->
+    <div class="panel calculator-panel">
+      <h2>Калькулятор Урона</h2>
+
+      <div class="input-group">
+        <label for="damage">Урон</label>
+        <input type="number" id="damage" min="0" step="any" placeholder="Введите урон">
+      </div>
+
+      <div class="input-group">
+        <label for="armorPiercing">Бронепробитие</label>
+        <input type="number" id="armorPiercing" min="0" step="any" placeholder="Введите бронепробитие">
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="input-group">
+        <label for="armor">Броня</label>
+        <input type="number" id="armor" min="0" step="any" placeholder="Введите значение брони">
+      </div>
+
+      <button class="advanced-toggle" onclick="toggleAdvanced()">⚙️ Расширенные настройки</button>
+
+      <div class="advanced-settings" id="advancedSettings">
+        <div class="checkbox-group">
+          <input type="checkbox" id="force24Falloff" onchange="calculateDamage()">
+          <label for="force24Falloff">Не работает не тыкайте сюда)</label> <!--- ##### ##### ##### bro fix me pls ##### ##### ##### --->
+        </div>
+
+        <div class="input-group">
+          <label for="distance">Расстояние до цели (в тайлах)</label>
+          <input type="number" id="distance" min="0" step="any" placeholder="Введите расстояние">
+        </div>
+
+        <div id="falloffContainer">
+          <div class="falloff-group">
+            <h4>Падение урона с расстоянием</h4>
+            <div class="falloff-inputs">
+              <div class="input-group">
+                <label>Расстояние</label>
+                <input type="number" class="falloff-distance" min="0" step="any" placeholder="Расстояние">
+              </div>
+              <div class="input-group">
+                <label>Значение</label>
+                <input type="number" class="falloff-value" min="0" step="any" placeholder="Значение">
+              </div>
+            </div>
           </div>
+        </div>
+
+        <button class="add-falloff-btn" onclick="addFalloffRange()">+ Add Falloff Range</button>
       </div>
 
-      <div class="dropdown">
-       <button class="preset-btn" data-name="m4spr" style="background-image:url('m4spr.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setDamageAndAP(56, 5)">Обычный</button>
-          <button onclick="setDamageAndAP(42, 40)">Бронебойный</button>
-          <button onclick="setDamageAndAP(4.2, 0)">Резиновый</button>
-          <button onclick="setDamageAndAP(60.5, 35)">Высокоскоростной (A19)</button>
-          <button onclick="setDamageAndAP(44, 50)">Ударный (A19)</button>
-          <button onclick="setDamageAndAP(44, 25)">Зажигательный (A19)</button>
-          <button onclick="setDamageAndAP(44, 5)">Обычный (A19)</button>
-          <button onclick="setDamageAndAP(33, 40)">Бронебойный (A19)</button>
-          <button onclick="setDamageAndAP(3.3, 5)">Резиновый (A19)</button>
-        </div>
-     </div>
-
-     <div class="dropdown">
-       <button class="preset-btn" data-name="m63" style="background-image:url('m63.png')"></button>
-        <div class="dropdown-content">
-          <button onclick="setDamageAndAP(34, 5)">Обычный</button>
-          <button onclick="setDamageAndAP(26, 40)">Бронебойный</button>
-          <button onclick="setDamageAndAP(45, 30)">HEAP</button>
-          <button onclick="setDamageAndAP(3, 5)">Резиновый</button>
-        </div>
-     </div>
-
-     <div class="dropdown">
-       <button class="preset-btn" data-name="m42a2" style="background-image:url('m42a2.png')"></button>
-        <div class="dropdown-content">
-          <button onclick="setDamageAndAP(70, 20)">Пуля</button>
-        </div>
-     </div>
-
-     <div class="dropdown">
-       <button class="preset-btn" data-name="xm88" style="background-image:url('xm88.png')"></button>
-        <div class="dropdown-content">
-          <button onclick="setDamageAndAP(80, 10)">Пуля (каждое последующее попадание по той же цели добавляет 10 ББ, стакается до 50)</button>
-        </div>
-     </div>
+      <div id="result">—</div>
     </div>
 
-    <!-- Calculator -->
-    <div class="calculator">
-      <h2>Damage Calculator</h2>
-
-      <div class="input-group">
-        <label for="damage">Damage:</label>
-        <input type="number" id="damage" min="0" step="any" required>
-      </div>
-
-      <div class="input-group">
-        <label for="armorPiercing">Armor Piercing:</label>
-        <input type="number" id="armorPiercing" min="0" step="any" required>
-      </div>
-
-      <hr>
-
-      <div class="input-group">
-        <label for="armor">Armor:</label>
-        <input type="number" id="armor" min="0" step="any" required>
-      </div>
-
-      <div id="result"></div>
+    <!-- Armor Panel -->
+    <div class="panel armor-panel">
+      <h3>Тип брони</h3>
+      <div id="armorGrid" class="preset-grid"></div>
     </div>
+  </div>
 
-    <!-- Right Panel: Armor Presets -->
-    <div class="preset-panel" id="armorPanel">
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Бойлер" style="background-image:url('boiler.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(20)">Обычный</button>
-          <button onclick="setArmor(0)">Траппер (силкер)</button>
+  <script>
+    // Weapon stats: damage, AP, falloff_distance, falloff_value, [falloff_distance2, falloff_value2]
+    const WEAPONS = {
+      "M41A": {
+        "Стандарт": [44, 5, 7, 4],
+        "Бронебойный": [33, 40, 7, 4, 12, 2],
+        "HEAP": [55, 40, 7, 4]
+      },
+      "M4RA": {
+        "Стандарт": [56, 5, 24, 9999], // Make 24 9999 optional FIX FIX FIX 
+        "Бронебойный": [46, 40, 24, 9999],
+        "HEAP": [77, 40, 24, 9999],
+        "Высокоскоростной (A19)": [55, 35, 24, 9999],
+        "Ударный (A19)": [40, 50, 24, 9999],
+        "Зажигательный (A19)": [40, 25, 24, 9999]
+      },
+      "M39": {
+        "Стандарт": [34, 5, 22, 9999],
+        "Бронебойный": [26, 30, 22, 9999],
+        "HEAP": [45, 30, 22, 9999]
+      },
+      "M42A2": {
+        "Дробь (x1)": [65, 5, 0, 1, 4, 9999],
+        "Пуля": [70, 20, 0, 1, 8, 9999],
+        "Флешетта (x1)": [30, 35, 0, 1, 12, 9999],
+      }
+    };
+
+    // Armor stats: armor_value
+    const ARMOR = {
+      "Бегун": 10,
+      "Бегун (Асидер)": 15,
+      "Дрон": 0,
+      "Страж": 0,
+      "Защитник (Обычный и стальной)": 35,
+      "Защитник (Голова опущена, обычный и стальной)": 40, // Drop-down for varitaions, drop-down for xeno strains
+      "Защитник (Укреплён, Лоб)": 70,
+      "Защитник (Укреплён, Спина/Бок)": 65,
+      "Защитник (Стальной, Укреплён, Лоб)": 60,
+      "Защитник (Стальной, Укреплён, Спина/Бок)": 45,
+      "Воин": 20,
+      "Воин (Боксёр)": 25,
+      "Плеватель": 15,
+      "Бойлер": 20,
+      "Бойлер (Траппер)": 0,
+      "Преторианец (Обычный, Авангард, Угнетатель)": 25,
+      "Преторианец (Танцор)": 20,
+      "Преторианец (Валькирия)": 35,
+      "Крушитель": 30,
+      "Крушитель (Таран, Лоб)": 30,
+      "Крушитель (Таран, Спина/Бок)": 15,
+      "Разрушитель (Обычный)": 25,
+      "Разрушитель (Берсерк)": 30,
+      "Разрушитель (Ёж)": 30,
+      "Королева": 25,
+      "Бурильщик": 25,
+      "Охотник": 20
+    };
+
+    let falloffRangeCount = 1;
+
+    function toggleAdvanced() {
+      const settings = document.getElementById('advancedSettings');
+      settings.classList.toggle('active');
+    }
+
+    function addFalloffRange() {
+      falloffRangeCount++;
+      const container = document.getElementById('falloffContainer');
+      
+      const falloffGroup = document.createElement('div');
+      falloffGroup.className = 'falloff-group';
+      falloffGroup.innerHTML = `
+        <h4>Falloff Range ${falloffRangeCount}</h4>
+        <div class="falloff-inputs">
+          <div class="input-group">
+            <label>Distance</label>
+            <input type="number" class="falloff-distance" min="0" step="any" placeholder="Distance">
+          </div>
+          <div class="input-group">
+            <label>Value</label>
+            <input type="number" class="falloff-value" min="0" step="any" placeholder="Value">
+          </div>
         </div>
-     </div>
+        <button class="remove-falloff-btn" onclick="this.parentElement.remove()">Remove</button>
+      `;
+      
+      container.appendChild(falloffGroup);
+    }
 
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Не бронированные " style="background-image:url('noarmor.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(0)">Носилка (любая)</button>
-          <button onclick="setArmor(0)">Дрон (любой)</button>
-          <button onclick="setArmor(0)">Лорд (любой)</button>
-          <button onclick="setArmor(0)">Страж</button>
-        </div>
-     </div>
+    function calculateDamage() {
+      let damage = parseFloat(document.getElementById('damage').value);
+      const armor = parseFloat(document.getElementById('armor').value);
+      const armorPiercing = parseFloat(document.getElementById('armorPiercing').value);
+      const distance = parseFloat(document.getElementById('distance').value);
+      const force24Falloff = document.getElementById('force24Falloff').checked;
 
-      <div class="dropdown">
-        <button class="preset-btn" data-name="Бурильщик" style="background-image:url('burrower.png')" onclick="setArmor(25)"></button>
-     </div>
+      if (isNaN(damage) || isNaN(armor) || isNaN(armorPiercing)) {
+        document.getElementById('result').innerHTML = '—';
+        return;
+      }
 
-      <div class="dropdown">
-        <button class="preset-btn" data-name="Плеватель" style="background-image:url('spitter.png')" onclick="setArmor(15)"></button>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Воин" style="background-image:url('warrior.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(20)">Обычный</button>
-          <button onclick="setArmor(25)">Боксёр</button>
-        </div>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Крушитель" style="background-image:url('crusher.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(30)">Обычный</button>
-          <button onclick="setArmor(30)">Таран (Лоб)</button>
-          <button onclick="setArmor(15)">Таран</button>
-        </div>
-     </div>
-
-      <div class="dropdown">
-        <button class="preset-btn" data-name="Охотник (любой)" style="background-image:url('lurker.png')" onclick="setArmor(20)"></button>
-     </div>
-
-      <div class="dropdown">
-        <button class="preset-btn" data-name="Королева (любая)" style="background-image:url('queen.png')" onclick="setArmor(25)"></button>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Разрушитель" style="background-image:url('ravager.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(25)">Обычный</button>
-          <button onclick="setArmor(30)">Берсерк</button>
-          <button onclick="setArmor(30)">Ёж</button>
-        </div>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Преторианец" style="background-image:url('praetorian.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(25)">Обычный</button>
-          <button onclick="setArmor(35)">Валькирия</button>
-          <button onclick="setArmor(25)">Угнетатель</button>
-          <button onclick="setArmor(25)">Авангард</button>
-          <button onclick="setArmor(20 ?>">Танцор</button>
-        </div>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Бегун" style="background-image:url('runner.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(10)">Обычный</button>
-          <button onclick="setArmor(15)">Окислитель</button>
-        </div>
-     </div>
-
-      <div class="dropdown">
-       <button class="preset-btn" data-name="Защитник" style="background-image:url('defender.png')"></button>
-       <div class="dropdown-content">
-          <button onclick="setArmor(35)">Обычный</button>
-          <button onclick="setArmor(40)">Опустил голову</button>
-          <button onclick="setArmor(70)">Укреплённый (Лоб)</button>
-          <button onclick="setArmor(65)">Укреплённый (Бок и зад)</button>
-          <button onclick="setArmor(35)">Стальной</button>
-          <button onclick="setArmor(40)">Стальной опустил голову</button>
-          <button onclick="setArmor(60)">Стальной укреплённый (Лоб)</button>
-          <button onclick="setArmor(45)">Стальной укреплённый (Бок и зад)</button>
-        </div>
-     </div>
-   </div>
-
-    <script>
-      function calculateDamage() {
-        const damage = parseFloat(document.getElementById('damage').value);
-        const armor = parseFloat(document.getElementById('armor').value);
-        const armorPiercing = parseFloat(document.getElementById('armorPiercing').value);
-
-        if (isNaN(damage) || isNaN(armor) || isNaN(armorPiercing)) {
-          document.getElementById('result').innerHTML = 'Please enter valid numbers.';
-          return;
+      // Apply falloff if distance is provided
+      if (!isNaN(distance) && distance > 0) {
+        // Apply forced 24 tile falloff if checkbox is checked
+        if (force24Falloff && distance >= 24) {
+          damage = Math.max(0, damage - 9999);
+        } else {
+          // Collect all falloff ranges
+          const falloffRanges = [];
+          const distanceInputs = document.querySelectorAll('.falloff-distance');
+          const valueInputs = document.querySelectorAll('.falloff-value');
+          
+          for (let i = 0; i < distanceInputs.length; i++) {
+            const dist = parseFloat(distanceInputs[i].value);
+            const val = parseFloat(valueInputs[i].value);
+            if (!isNaN(dist) && !isNaN(val)) {
+              falloffRanges.push({ distance: dist, value: val });
+            }
+          }
+          
+          // Sort by distance
+          falloffRanges.sort((a, b) => a.distance - b.distance);
+          
+          // Apply falloff
+          let currentFalloff = 0;
+          for (const range of falloffRanges) {
+            if (distance >= range.distance) {
+              currentFalloff = range.value;
+            } else {
+              break;
+            }
+          }
+          
+          if (currentFalloff > 0) {
+            const tilesOverDistance = falloffRanges.length > 0 
+              ? Math.max(0, distance - falloffRanges.find(r => r.value === currentFalloff).distance)
+              : 0;
+            damage = Math.max(0, damage - (tilesOverDistance * currentFalloff));
+          }
         }
+      }
 
-        const effectiveArmor = Math.max(0, armor - armorPiercing);
-        const armorDeflectionTotal = Math.pow(1.1, effectiveArmor / 5);
-        let newDamage = damage / armorDeflectionTotal;
+      const effectiveArmor = Math.max(0, armor - armorPiercing);
+      const armorDeflectionTotal = Math.pow(1.1, effectiveArmor / 5);
+      let newDamage = damage / armorDeflectionTotal;
 
-        if (newDamage < effectiveArmor * 2) {
-          const damageWithArmor = newDamage * 4 - effectiveArmor;
-          newDamage = newDamage * (damageWithArmor / (newDamage * 4));
+      if (newDamage < effectiveArmor * 2) {
+        const damageWithArmor = newDamage * 4 - effectiveArmor;
+        newDamage = newDamage * (damageWithArmor / (newDamage * 4));
+      }
+
+      document.getElementById('result').innerHTML = `${newDamage.toFixed(2)}`;
+    }
+
+    function setWeaponStats(damage, ap, ...falloffs) {
+      document.getElementById('damage').value = damage;
+      document.getElementById('armorPiercing').value = ap;
+      
+      // Clear existing falloff ranges
+      const container = document.getElementById('falloffContainer');
+      container.innerHTML = '';
+      falloffRangeCount = 0;
+      
+      // Add falloff ranges from weapon stats
+      for (let i = 0; i < falloffs.length; i += 2) {
+        if (falloffs[i] !== undefined && falloffs[i + 1] !== undefined) {
+          falloffRangeCount++;
+          const falloffGroup = document.createElement('div');
+          falloffGroup.className = 'falloff-group';
+          falloffGroup.innerHTML = `
+            <h4>Falloff Range ${falloffRangeCount}</h4>
+            <div class="falloff-inputs">
+              <div class="input-group">
+                <label>Distance</label>
+                <input type="number" class="falloff-distance" min="0" step="any" value="${falloffs[i]}">
+              </div>
+              <div class="input-group">
+                <label>Value</label>
+                <input type="number" class="falloff-value" min="0" step="any" value="${falloffs[i + 1]}">
+              </div>
+            </div>
+            ${falloffRangeCount > 1 ? '<button class="remove-falloff-btn" onclick="this.parentElement.remove()">Remove</button>' : ''}
+          `;
+          container.appendChild(falloffGroup);
         }
-
-        document.getElementById('result').innerHTML = `Final Damage: ${newDamage.toFixed(2)}`;
       }
-
-      function setDamageAndAP(damage, armorPiercing) {
-        document.getElementById('damage').value = damage;
-        document.getElementById('armorPiercing').value = armorPiercing;
-        calculateDamage();
+      
+      if (falloffRangeCount === 0) {
+        falloffRangeCount = 1;
+        const falloffGroup = document.createElement('div');
+        falloffGroup.className = 'falloff-group';
+        falloffGroup.innerHTML = `
+          <h4>Falloff Range 1</h4>
+          <div class="falloff-inputs">
+            <div class="input-group">
+              <label>Distance</label>
+              <input type="number" class="falloff-distance" min="0" step="any" placeholder="Distance">
+            </div>
+            <div class="input-group">
+              <label>Value</label>
+              <input type="number" class="falloff-value" min="0" step="any" placeholder="Value">
+            </div>
+          </div>
+        `;
+        container.appendChild(falloffGroup);
       }
+      
+      calculateDamage();
+    }
 
-      function setArmor(armor) {
-        document.getElementById('armor').value = armor;
-        calculateDamage();
+    function setArmor(armor) {
+      document.getElementById('armor').value = armor;
+      calculateDamage();
+    }
+
+    function renderWeapons() {
+      const grid = document.getElementById('weaponGrid');
+      
+      for (const [weaponName, ammoTypes] of Object.entries(WEAPONS)) {
+        const dropdown = document.createElement('div');
+        dropdown.className = 'dropdown';
+        
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.setAttribute('data-name', weaponName);
+        
+        const label = document.createElement('span');
+        label.className = 'preset-btn-label';
+        label.textContent = weaponName;
+        btn.appendChild(label);
+        
+        // Click on button selects first ammo type
+        const firstAmmoStats = Object.values(ammoTypes)[0];
+        btn.onclick = (e) => {
+          if (e.target === btn || e.target === label) {
+            setWeaponStats(...firstAmmoStats);
+          }
+        };
+        
+        const dropdownContent = document.createElement('div');
+        dropdownContent.className = 'dropdown-content';
+        
+        for (const [ammoType, stats] of Object.entries(ammoTypes)) {
+          const ammoBtn = document.createElement('button');
+          ammoBtn.textContent = `${ammoType} (${stats[0]}/${stats[1]})`;
+          ammoBtn.onclick = () => setWeaponStats(...stats);
+          dropdownContent.appendChild(ammoBtn);
+        }
+        
+        dropdown.appendChild(btn);
+        dropdown.appendChild(dropdownContent);
+        grid.appendChild(dropdown);
       }
+    }
 
-      // Automatically calculate whenever user edits fields
-      document.addEventListener("DOMContentLoaded", () => {
-        const inputs = document.querySelectorAll("#damage, #armor, #armorPiercing");
-        inputs.forEach(input => input.addEventListener("input", calculateDamage));
-      });
-    </script>
+    function renderArmor() {
+      const grid = document.getElementById('armorGrid');
+      
+      for (const [armorType, armorValue] of Object.entries(ARMOR)) {
+        const btn = document.createElement('button');
+        btn.className = 'preset-btn';
+        btn.setAttribute('data-name', `${armorType} (${armorValue})`);
+        
+        const label = document.createElement('span');
+        label.className = 'preset-btn-label';
+        label.textContent = armorType;
+        btn.appendChild(label);
+        
+        btn.onclick = () => setArmor(armorValue);
+        grid.appendChild(btn);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const inputs = document.querySelectorAll("#damage, #armor, #armorPiercing, #distance");
+      inputs.forEach(input => input.addEventListener("input", calculateDamage));
+      
+      renderWeapons();
+      renderArmor();
+    });
+  </script>
 </body>
-</html>
+</html> 
